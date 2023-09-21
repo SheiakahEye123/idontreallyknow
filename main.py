@@ -32,32 +32,42 @@ def leaky_relu(x):
 def sigma_oid(x): return 1 / (1 + np.power(math.e, -x))
 
 
-def neuron_activation(A, W, B): return sigma_oid(np.sum(np.array(W) * np.array(A)) + B)
+def neuron_activation(A, W, B):    return sigma_oid(np.sum(np.array(W) * np.array(A)) + B), np.sum(
+    np.array(W) * np.array(A)) + B
 
 
 def layer(input, layernumber):
     if layernumber == LAYER_COUNT: return [neuron_activation(input, weights[layernumber], biases[layernumber][i])
-                                               for i in range(10)]
+                                           for i in range(10)]
     return [neuron_activation(input, weights[layernumber], biases[layernumber][i]) for i in range(LAYER_SCALE)]
 
-def cost(input, correctlayer): return np.square(input - correctlayer)
+
+def cost(input, correctlayer): return np.sum(np.square(np.array(input).T[0] - np.array(correctlayer)))
 
 
-indicee = random.randint(0, 59999)
-weights = [[1 for i in range(LAYER_SCALE)] for e in range(LAYER_COUNT + 1)]
+# def backprop():
+
+
+weights = [[[0, 0] for i in range(LAYER_SCALE)] for e in range(LAYER_COUNT + 1)]
 weights[0] = np.ones_like(train[0])
-
 
 biases = [[0 for x in range(LAYER_SCALE)] for y in range(LAYER_COUNT)]
 biases.append([0 for z in range(10)])
 
 
+def trainone(index):
+    layers = [layer(train[index], 0)]
+    layers.append(layer(layers[0], 1))
+    layers.append(layer(layers[1], 2))
+    correctlayer = np.zeros(10)
+    correctlayer[trainlabels[index] - 1] = 1.00
+    coast = cost(layers[LAYER_COUNT], correctlayer)
+    print(coast)
+    plt.figure(0)
+    plt.imshow(train[index])
+    plt.show()
+    # cost(layers[LAYER_COUNT], trainlabels[index])
 
-layers = [layer(train[indicee], 0)]
-layers.append(layer(layers[0], 1))
-layers.append(layer(layers[1], 2))
-
-print(layers)
 
 # for i in range(LAYER_COUNT): layers.append(layer(layers[i-1], i+1))
 # print(weights)
@@ -65,3 +75,5 @@ print(layers)
 # layers.append(layer(layers[i-1], LAYER_COUNT))
 # https://www.youtube.com/watch?v=IHZwWFHWa-w&list=TLPQMTcwOTIwMjP58GT4ZekNuQ&index=4
 # [1 for i in range(LAYER_SCALE)] for e in range(LAYER_COUNT + 2)]
+
+trainone(3)
