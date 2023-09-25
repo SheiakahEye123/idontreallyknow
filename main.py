@@ -57,8 +57,7 @@ biases.append([0 for z in range(10)])
 
 def trainone(index):
     layers = [layer(train[index], 0)]
-    layers.append(layer(layers[0], 1))
-    layers.append(layer(layers[1], 2))
+    for i in range(LAYER_COUNT): layers.append(layer(layers[i], i + 1))
     correctlayer = np.zeros(10)
     correctlayer[trainlabels[index] - 1] = 1.00
     coast = cost(layers[LAYER_COUNT], correctlayer)
@@ -66,14 +65,11 @@ def trainone(index):
     plt.figure(0)
     plt.imshow(train[index])
     plt.show()
-    # cost(layers[LAYER_COUNT], trainlabels[index])
 
+#backprop code:
+def backprop(cost, layers, weights):
 
-# for i in range(LAYER_COUNT): layers.append(layer(layers[i-1], i+1))
-# print(weights)
-# print(biases)
-# layers.append(layer(layers[i-1], LAYER_COUNT))
-# https://www.youtube.com/watch?v=IHZwWFHWa-w&list=TLPQMTcwOTIwMjP58GT4ZekNuQ&index=4
-# [1 for i in range(LAYER_SCALE)] for e in range(LAYER_COUNT + 2)]
+    slope = layer[:][1]
+
 
 trainone(3)
